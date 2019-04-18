@@ -7,23 +7,14 @@
                     <div class="card-title my-5">
                         <div class="media">
                             <div class="media-body">
-                                <form action = "{{url_for('createMovie')}}" method = 'POST' >
+                                <form action = "{{url_for('deleteCategory')}}" method = 'POST' >
                                     <div class="form-group">
-                                        <label>Movie's Name</label>
-                                        <input type='text' name='name' class="form-control" placeholder="Enter Movie Name">
-                                        <label class="mt-3">Trailer URL</label>
-                                        <input type='text' name='trailer' class="form-control" placeholder="Enter Trailer URL">
-                                        <label class="mt-3">Photo URL</label>
-                                        <input type='text' name='photo' class="form-control" placeholder="Enter Photo URL">
-                                        <label for="exampleFormControlSelect1" class="mt-3">Category</label>
+                                        <label for="exampleInputEmail1">Select Category To delete</label>
                                         <select class="form-control" name="category">
                                             {% for category in categories %}
                                                 <option value="{{category.id}}">{{ category.name }}</option>
                                             {% endfor %}
-                                        </select>
-                                        <label class="mt-3">Description</label>
-                                        <textarea name="description" class="form-control" rows="3"></textarea>
-                                    </div>
+                                        </select>                                                </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <a href="{{url_for('showCategory')}}">Cancel</a>
                                 </form>
