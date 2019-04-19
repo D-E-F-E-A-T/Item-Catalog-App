@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% block content %}
+    <!-- left side nav bar -->
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading text-center">Categories</div>
@@ -9,6 +10,7 @@
                 {% endfor %}
             </div>
         </div>
+        <!-- to prevent none signed in users to create or delete content -->
         {%if 'email' not in session %}
             <div></div>
         {% else %}
@@ -20,7 +22,7 @@
                 <a href="{{url_for('createMovie')}}" class="btn btn-info mt-3 col-12" role="button">New Movie</a>
             </div>    
         {% endif %}
-
+        <!-- Site content showing movies -->
         <div class="container mt-3 col">
             <div class = "card-deck">
                 {% for movie in movies %}

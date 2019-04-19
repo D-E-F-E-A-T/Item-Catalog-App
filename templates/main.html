@@ -10,10 +10,12 @@
     </head>
 
     <body>
+        <!-- Nav bar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container col">
                 <h2 class="text-secondary">MOVIE CATALOG</h2>
                 <a class="navbar-brand" href="{{url_for('showCategory')}}"><img class="text-center" src="https://img.icons8.com/plasticine/2x/home-page.png" width="60px" height="60px"></a>
+                <!-- check if the user is sign in to display his picture and email -->
                 {%if 'email' not in session %}
                 <div></div>
                 {% else %}
@@ -27,6 +29,7 @@
                 </div>
                 {% endif %}
                 <div class="text-right">
+                    <!-- check if the user is sign in to display either Login or Logout in the Nav Bar -->
                     {%if 'email' not in session %}
                     <a href="{{url_for('showLogin')}}" class="btn btn-info" role="button">Login</a>
                     {% else %}

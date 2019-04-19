@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% block content %}
+    <!-- left side nav bar -->
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading text-center">Categories</div>
@@ -9,6 +10,7 @@
                     <li class="list-group-item "><a href="{{url_for('showCatergoryMovies', category_id=category.id)}}" >{{ category.name }}</a></li>
                 {% endfor %}
             </div>
+            <!-- to prevent none signed in users to create or delete content -->
             {%if 'email' not in session %}
                 <div></div>
             {% else %}
@@ -21,7 +23,7 @@
                 </div>    
             {% endif %}
         </div>
-
+        <!-- Site content showing movies -->
         <div class="container mt-3 col">
             <div class = "card-deck">
                 {% for movie in movies %}

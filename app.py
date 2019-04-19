@@ -14,8 +14,8 @@ import requests
 
 app = Flask(__name__)
 
+#Get the client id from the json file
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
-
 APPLICATION_NAME = "Movie Catalog"
 
 #Connect to Database and create database session
@@ -23,6 +23,7 @@ engine = create_engine('sqlite:///movies_database.db')
 Base.metadata.bind = engine
 
 def createUser(login_session):
+    #Create new user in the database
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     newUser = User(name ="", email=login_session['email'], picture=login_session['picture'])
@@ -32,6 +33,7 @@ def createUser(login_session):
     return user.id
 
 def getUserInfo(user_id):
+    #This function takes the user_id as input and return the user
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     user = session.query(User).filter_by(id=user_id).one()
@@ -39,6 +41,7 @@ def getUserInfo(user_id):
 
 
 def getUserID(email):
+    #This function take email as inpute and check if a user is registred with this email
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     try:
@@ -47,6 +50,7 @@ def getUserID(email):
     except:
         return None
 
+#Home page that shows all categories and movies
 @app.route('/')
 @app.route('/category')
 def showCategory():
@@ -56,10 +60,12 @@ def showCategory():
     movies = session.query(Movie).all()
     return render_template('showCategories.html', categories = categories, movies = movies)
 
+#Create a new category
 @app.route('/category/create', methods = ['GET','POST'])
 def createCategory():
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
+    #Check if the user is logged in to create category
     if 'email' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -71,10 +77,12 @@ def createCategory():
     else:
         return render_template("createCategory.html")
 
+#Delete Category
 @app.route('/category/delete', methods = ['GET','POST'])
 def deleteCategory():
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
+    #Check if the user is logged in to delete category
     if 'email' not in login_session:
         return redirect('/login')
     categories = session.query(Category).filter_by(user_id = login_session['user_id']).all()
@@ -87,6 +95,7 @@ def deleteCategory():
     else:
         return render_template("deleteCategory.html", categories = categories)
 
+#Show a given category movies
 @app.route('/category/<int:category_id>/movies')
 def showCatergoryMovies(category_id):
     DBSession = sessionmaker(bind=engine)
@@ -95,11 +104,13 @@ def showCatergoryMovies(category_id):
     movies = session.query(Movie).filter_by(category_id=category_id).all()
     return render_template('showCategories.html', categories = categories, movies = movies)
 
+#Create a movie
 @app.route('/category/movies/create', methods = ['GET','POST'])
 def createMovie():
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     categories = session.query(Category).filter_by(user_id = login_session['user_id']).all()
+    #Check if the user is logged in to create movie
     if 'email' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -111,22 +122,26 @@ def createMovie():
     else:
         return render_template("createMovie.html", categories = categories)
 
+#Show a specefic movie
 @app.route('/category/movie/<int:movie_id>')
 def showMovie(movie_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     movie = session.query(Movie).filter_by(id = movie_id).one()
+    #Get youtube video id
     id_string = movie.trailer
     vid_id = id_string.split("=")
     v_id = vid_id[1]
     return render_template('showMovie.html',movie = movie, v_id = v_id)
 
+#Edit movie
 @app.route('/category/movie/<int:movie_id>/edit', methods = ['GET','POST'])
 def editMovie(movie_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     movie = session.query(Movie).filter_by(id = movie_id).one()
     categories = session.query(Category).filter_by(user_id = login_session['user_id']).all()
+    #Check if the user is logged in to edit movie
     if 'email' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -141,16 +156,19 @@ def editMovie(movie_id):
         flash("Movie Edited")
         return redirect(url_for('showCategory'))
     else:
+        #Check if it's the user owner of the movie or another user
         if movie.user_id == login_session['user_id']:
             return render_template("editMovie.html", movie = movie, categories = categories)
         else:
             return render_template('notAuthorized.html')
 
+#Delete movie
 @app.route('/category/movie/<int:movie_id>/delete', methods = ['GET','POST'])
 def deleteMovie(movie_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     movie = session.query(Movie).filter_by(id = movie_id).one()
+    #Check if the user is logged in to edit movie
     if 'email' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -160,12 +178,13 @@ def deleteMovie(movie_id):
         flash("Movie Deleted")
         return redirect(url_for('showCategory'))
     else:
+        #Check if it's the user owner of the movie or another user
         if movie.user_id == login_session['user_id']:
             return render_template("deleteMovie.html", movie = movie)
         else:
             return render_template('notAuthorized.html')
         
-
+#Login page
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -173,6 +192,7 @@ def showLogin():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+#Google+ Sing in
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -249,6 +269,8 @@ def gconnect():
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
+    
+    #An output to tell the user success of signing in
     output = ''
     output += '<h1>Welcome, '
     output += login_session['email']
@@ -259,6 +281,7 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['email'])
     return output
 
+#Google+ logging out
 @app.route('/gdisconnect')
 def gdisconnect():
     if not login_session['email']:
@@ -314,21 +337,7 @@ def showUserMoviesJSON(user_id):
     movies = session.query(Movie).filter_by(user_id = user_id).all()
     return jsonify(Movie=[movie.serialize for movie in movies])
 
-@app.route('/users/JSON')
-def showUsersJSON():
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
-    users = session.query(User).all()
-    # user = session.query(User).filter_by(id = 3).one()
-    # session.delete(user)
-    # session.commit()
-    return jsonify(User=[user.serialize for user in users])
-
-
-
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
   app.debug = True
   app.run(host = '0.0.0.0', port = 5000)
-
-

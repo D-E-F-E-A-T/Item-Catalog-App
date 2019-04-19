@@ -12,6 +12,7 @@
     <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
   </head>
   <body>
+    <!-- Nav bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container col">
             <h2 class="text-secondary">MOVIE CATALOG</h2>
@@ -37,6 +38,7 @@
             </div>
         </div>
     </nav>
+    <!-- Google+ sing in button -->
     <div id="createCatForm">
         <div class="container text-center col col-4">
             <div class="card bg-white col shadow p-3 mb-5 rounded">
@@ -62,7 +64,7 @@
                   // Hide the sign-in button now that the user is authorized
                   $('#signinButton').attr('style', 'display: none');
 
-                  // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+                  // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main page
                   $.ajax({
                     type: 'POST',
                     url: '/gconnect?state={{STATE}}',
