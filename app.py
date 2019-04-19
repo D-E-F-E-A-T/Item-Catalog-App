@@ -322,12 +322,37 @@ def showCategoriesJSON():
     return jsonify(categories=[category.serialize for category in categories])
 
 # JSON API to show a category by its id
-@app.route('/categories/<int:category_id>/JSON')
+@app.route('/category/<int:category_id>/JSON')
 def showCategoryJSON(category_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     categorie = session.query(Category).filter_by(id = category_id).one()
     return jsonify(Category=[categorie.serialize])
+
+# JSON API to show all movies
+@app.route('/categories/movies/JSON')
+def showMoviesJSON():
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    movies = session.query(Movie).all()
+    return jsonify(Movie=[movie.serialize for movie in movies])
+
+# JSON API to show a specific category movies
+@app.route('/category/<int:category_id>/movies/JSON')
+def showCategoryMoviesJSON(category_id):
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    movies = session.query(Movie).filter_by(category_id = category_id).all()
+    return jsonify(Movie=[movie.serialize for movie in movies])
+
+# JSON API to show a specific movie
+@app.route('/category/<int:category_id>/movie/<int:movie_id>/JSON')
+def showCategoryMovieJSON(category_id, movie_id):
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    movie = session.query(Movie).filter_by(category_id = category_id, id = movie_id).one()
+    return jsonify(Movie=[movie.serialize])
+
 
 # JSON API to show a specefic user movies
 @app.route('/movies/<int:user_id>/JSON')
