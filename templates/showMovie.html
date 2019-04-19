@@ -22,8 +22,12 @@
                                         </div>
                                     </div>
                                     <div class="col text-center">
-                                        <a href="{{url_for('editMovie', movie_id = movie.id)}}" class="btn btn-warning mt-5" role="button">Edit</a>
-                                        <a href="{{url_for('deleteMovie', movie_id = movie.id)}}" class="btn btn-danger mt-5" role="button">Delete</a>
+                                        {%if 'email' not in session %}
+                                        <div></div>
+                                        {% else %}
+                                            <a href="{{url_for('editMovie', movie_id = movie.id)}}" class="btn btn-warning mt-5" role="button">Edit</a>
+                                            <a href="{{url_for('deleteMovie', movie_id = movie.id)}}" class="btn btn-danger mt-5" role="button">Delete</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -9,13 +9,17 @@
                     <li class="list-group-item "><a href="{{url_for('showCatergoryMovies', category_id=category.id)}}" >{{ category.name }}</a></li>
                 {% endfor %}
             </div>
-            <div class="text-center">
-                <a href="{{url_for('createCategory')}}" class="btn btn-primary mt-5" role="button">New Category</a>
-                <a href="{{url_for('deleteCategory')}}" class="btn btn-danger mt-5" role="button">Delete Category</a>
-            </div>
-            <div class="text-center ">
-                <a href="{{url_for('createMovie')}}" class="btn btn-primary mt-3 col-12" role="button">New Movie</a>
-            </div>
+            {%if 'email' not in session %}
+                <div></div>
+            {% else %}
+                <div class="text-center">
+                    <a href="{{url_for('createCategory')}}" class="btn btn-info mt-5" role="button">New Category</a>
+                    <a href="{{url_for('deleteCategory')}}" class="btn btn-danger mt-5" role="button">Delete Category</a>
+                </div>
+                <div class="text-center ">
+                    <a href="{{url_for('createMovie')}}" class="btn btn-info mt-3 col-12" role="button">New Movie</a>
+                </div>    
+            {% endif %}
         </div>
 
         <div class="container mt-3 col">
@@ -26,7 +30,7 @@
                         <img src="{{ movie.photo }}" class="card-img-top" alt="..." height="220" width="326">
                         <div class="card-body">
                         <h5 class="card-title">{{ movie.name }}</h5>
-                        <a href="{{url_for('showMovie', movie_id = movie.id)}}" class="btn btn-primary">See More</a>
+                        <a href="{{url_for('showMovie', movie_id = movie.id)}}" class="btn btn-info">See More</a>
                         </div>
                     </div>
                 </span>
