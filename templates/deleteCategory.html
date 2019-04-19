@@ -2,26 +2,18 @@
 {% block content %}
     <div id="createCatForm">
         <div class="container text-center col col-4">
-            <div id="about">
-                <div class="card bg-white col shadow p-3 mb-5 rounded">
-                    <div class="card-title my-5">
-                        <div class="media">
-                            <div class="media-body">
-                                <form action = "{{url_for('deleteCategory')}}" method = 'POST' >
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Select Category To delete</label>
-                                        <select class="form-control" name="category">
-                                            {% for category in categories %}
-                                                <option value="{{category.id}}">{{ category.name }}</option>
-                                            {% endfor %}
-                                        </select>                                                </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                    <a href="{{url_for('showCategory')}}">Cancel</a>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card bg-white col shadow p-3 mb-5 rounded">
+                <form action = "{{url_for('deleteCategory')}}" method = 'POST' >
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Select Category To delete</label>
+                        <select class="form-control" name="category">
+                            {% for category in categories %}
+                                <option value="{{category.id}}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>                                                </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="{{url_for('showCategory')}}">Cancel</a>
+                </form>
             </div>
         </div>
     </div>
